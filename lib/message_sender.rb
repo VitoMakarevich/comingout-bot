@@ -1,5 +1,4 @@
-require './lib/reply_markup_formatter'
-
+# class for send info from bot to user
 class MessageSender
   attr_reader :bot
   attr_reader :text
@@ -14,18 +13,6 @@ class MessageSender
   end
 
   def send
-    if reply_markup
-      bot.api.send_message(chat_id: chat.id, text: text, reply_markup: reply_markup)
-    else
-      bot.api.send_message(chat_id: chat.id, text: text)
-    end
-  end
-
-  private
-
-  def reply_markup
-    if answers
-      ReplyMarkupFormatter.new(answers).get_markup
-    end
+    bot.api.send_message(chat_id: chat.id, text: text)
   end
 end

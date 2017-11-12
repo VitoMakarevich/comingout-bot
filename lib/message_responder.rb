@@ -1,47 +1,42 @@
 require './lib/message_sender'
+require_relative 'info_reader'
 
+# class for respond to telegram bot
 class MessageResponder
   attr_reader :message
   attr_reader :bot
+  START_TEXT = '/start'.freeze
+  STOP_TEXT = '/stop'.freeze
+  HELLO_MESSAGE = 'Привет, я могу рассказать много интересного ;)'.freeze
+  BYE_MESSAGE = 'Надеюсь, тебе было интересно ;)'.freeze
+  RESOLVE = 'Да'.freeze
+  REJECT = 'Нет'.freeze
 
   def initialize(options)
     @bot = options[:bot]
     @message = options[:message]
+    @info_reader = InfoReader.new
   end
 
   def respond
-    on /^\/start/ do
-      answer_with_greeting_message
-    end
-
-    on /^\/stop/ do
-      answer_with_farewell_message
+    case @message.text
+    when START_TEXT
+      answer_with_message(HELLO_MESSAGE)
+    when STOP_TEXT
+      answer_with_message(BYE_MESSAGE)
+    else
+      find_answer
     end
   end
 
   private
 
-  def on(regex, &block)
-    regex =~ message.text
-
-    if $~
-      case block.arity
-      when 0
-        yield
-      when 1
-        yield $1
-      when 2
-        yield $1, $2
-      end
+  def find_answer
+    if @info_reader.is?(@message.text)
+      answer_with_message(RESOLVE)
+    else
+      answer_with_message(REJECT)
     end
-  end
-
-  def answer_with_greeting_message
-    answer_with_message 'Привет братюня'
-  end
-
-  def answer_with_farewell_message
-    answer_with_message 'Пока мой герой'
   end
 
   def answer_with_message(text)

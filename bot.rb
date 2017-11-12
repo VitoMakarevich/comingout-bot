@@ -6,7 +6,7 @@ token = ENV['TELEGRAM_TOKEN']
 
 Telegram::Bot::Client.run(token) do |bot|
   bot.listen do |message|
-    options = {bot: bot, message: message}
+    options = { bot: bot, message: message }
 
     MessageResponder.new(options).respond
   end

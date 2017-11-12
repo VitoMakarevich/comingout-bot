@@ -1,4 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'telegram-bot-ruby'
+gem 'mechanize'
 gem 'pry'
+gem 'redis'
+gem 'telegram-bot-ruby'
